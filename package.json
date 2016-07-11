@@ -1,0 +1,40 @@
+{
+  "name": "watchful-scribe",
+  "version": "1.0.0",
+  "description": "Query condom for time-series data",
+  "main": "index.js",
+  "scripts": {
+    "build": "rm -rf lib && tsc -p ./",
+    "prepublish": "typings install && npm run build",
+    "test": "tsc -p ./ && mocha test -r test/_setup.js --recursive && tslint src/**/*.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/WatchBeam/watchful-scribe.git"
+  },
+  "keywords": [
+    "influx",
+    "time",
+    "series",
+    "transcription",
+    "permissions"
+  ],
+  "author": "Connor Peet <connor@peet.io>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/WatchBeam/watchful-scribe/issues"
+  },
+  "homepage": "https://github.com/WatchBeam/watchful-scribe#readme",
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "mocha": "^2.5.3",
+    "sinon": "^1.17.4",
+    "tslint": "^3.13.0",
+    "typescript": "^2.0.0",
+    "typings": "^1.3.1"
+  },
+  "dependencies": {
+    "influx": "^4.2.0",
+    "mysql": "^2.11.1"
+  }
+}
