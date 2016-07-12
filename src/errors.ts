@@ -17,4 +17,21 @@ export class QueryValidationError extends Error {
             type: 'scribe'
         }];
     }
+
+    /**
+     * Returns the path of the attribute which failed validation.
+     */
+    getPath(): string {
+        return this.details[0].path;
+    }
+
+    /**
+     * Creates a new QueryValidationError, using the same stacktrace and
+     * message, but with a modified validation path.
+     */
+    setPath(path: string): QueryValidationError {
+        const err = new QueryValidationError(path, this.message);
+        err.stack = this.stack; // preserve original stacktrace
+        return err;
+    }
 }

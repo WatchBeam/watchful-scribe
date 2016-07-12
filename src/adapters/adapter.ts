@@ -4,7 +4,8 @@ import { Query } from "../types";
 export interface Adapter {
     /**
      * Validate should ensure that the query is grammatical in the target
-     * language. It may throw a Joi exception.
+     * language. It may throw a query exception. This method may
+     * assume that all basic data types on the query are correct.
      */
     validate(query: Query): void;
 

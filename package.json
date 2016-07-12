@@ -6,7 +6,8 @@
   "scripts": {
     "build": "rm -rf lib && tsc -p ./",
     "prepublish": "typings install && npm run build",
-    "test": "tsc -p ./ && mocha test -r test/_setup.js --recursive && tslint src/**/*.ts"
+    "cover": "tslint src/**/*.ts && tsc -p ./ && istanbul cover -- _mocha test -r test/_setup.js",
+    "test": "tslint src/**/*.ts && tsc -p ./ && mocha test -r test/_setup.js --recursive"
   },
   "repository": {
     "type": "git",
@@ -27,6 +28,8 @@
   "homepage": "https://github.com/WatchBeam/watchful-scribe#readme",
   "devDependencies": {
     "chai": "^3.5.0",
+    "chai-subset": "^1.2.2",
+    "istanbul": "^0.4.4",
     "mocha": "^2.5.3",
     "sinon": "^1.17.4",
     "tslint": "^3.13.0",

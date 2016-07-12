@@ -124,12 +124,14 @@ export interface Query {
 /**
  * Validates that a query appears to be well-formed, throws an error if
  * it's not.
- * @param {Query} query
+ * @throws {QueryValidationError}
  */
-export function validateQuery(query: Query) {
+export function validateQuery(query: Query): Query {
     if (!query || typeof query !== "object") {
         throw new QueryValidationError("query", "Your query should be an object");
     }
+
+    query = Object.assign({ filter: {}, group: [] }, query);
 
     if (typeof query.series !== "string") {
         throw new QueryValidationError("query.series", "The series name must be a string");
@@ -139,23 +141,27 @@ export function validateQuery(query: Query) {
         throw new QueryValidationError("query.fields", "The query fields must be an object");
     }
 
-    if (query.filter && typeof query.filter !== "object") {
+    if (!query.filter || typeof query.filter !== "object") {
         throw new QueryValidationError("query.filter", "The query filter must be an object");
     }
 
-    if (query.group && !Array.isArray(query.group)) {
+    if (!query.group || !Array.isArray(query.group)) {
         throw new QueryValidationError("query.group", "The query group must be an array");
     }
 
     (function validateFields(obj: { [prop: string]: FieldQuery | string }, path: string) {
-        Object.keys(obj).forEach(key => {
-            if (!key) throw new QueryValidationError(`${path}.${key}`, "The field name is required");
+        if (obj == null) {
+            throw new QueryValidationError(path, "The query fields must be an object or string")
+        }
 
+        Object.keys(obj).forEach(key => {
             switch (typeof obj[key]) {
             case "string": return;
-            case "object": validateFields(<FieldQuery>obj[key], `${path}.${key}`);
+            case "object": return validateFields(<FieldQuery>obj[key], `${path}.${key}`);
             default: throw new QueryValidationError(`${path}.${key}`, "The field should be a string");
             }
         });
     })(query.fields, "query.fields");
+
+    return query;
 }

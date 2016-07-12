@@ -7,7 +7,7 @@ export class InfluxAdapter implements Adapter {
      * language. It may throw a Joi exception.
      */
     validate(query: Query): void {
-        return undefined; // todo
+
     }
 
     /**

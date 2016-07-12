@@ -62,7 +62,14 @@ export class Scribe {
      * QuerySingle runes a single query against the database.
      */
     querySingle(query: Query, context: any): Promise<Result> {
-        return this.queryAll([query], context).then(result => result[0]);
+        return this.queryAll([query], context)
+        .then(result => result[0])
+        .catch(err => {
+            if (err instanceof QueryValidationError) {
+                throw err.setPath(err.getPath().replace("query[0]", "query"));
+            }
+            throw err;
+        });
     }
 
     /**
@@ -73,7 +80,7 @@ export class Scribe {
         let fulfilled : Query[];
         try {
             fulfilled = queries.map((q, i) => {
-                validateQuery(q);
+                q = validateQuery(q);
 
                 if (!this.models.hasOwnProperty(q.series)) {
                     throw new QueryValidationError(
